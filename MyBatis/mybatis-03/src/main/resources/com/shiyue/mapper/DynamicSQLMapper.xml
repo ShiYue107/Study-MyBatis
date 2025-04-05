@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shiyue.mapper.DynamicSQLMapper">
+
+    <!--insertMoreEmp-->
+    <insert id="insertMoreEmp">
+        insert into t_emp values
+        <foreach collection="emps" item="emp" separator="," close=";">
+            (null,#{emp.empName},#{emp.age},#{emp.sex},#{emp.email},null)
+        </foreach>
+    </insert>
+
+    <!--deleteMoreEmp-->
+    <delete id="deleteMoreEmp">
+        delete from t_emp where eid in
+        <foreach collection="eids" item="eid" open="(" close=");" separator=",">
+            #{eid}
+        </foreach>
+    </delete>
+
+    <!--choose、when、otherwise等同于Java中的if...else if...else只要前一个满足则不判断后续条件-->
+    <select id="selectMoreEmpCWO" resultType="emp">
+        select * from t_emp
+        <where>
+            <choose>
+                <when test="empName != null and empName != ''">
+                    emp_name = #{empName}
+                </when>
+                <when test="age != null and age != 0">
+                    sex = #{sex}
+                </when>
+                <when test="email != null and email != ''">
+                    email = #{email}
+                </when>
+                <otherwise>
+                    eid = 1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <sql id="publicCode">
+        emp_name,sex,email
+    </sql>
+    
+    <!--trim-->
+    <select id="selectMoreEmp" resultType="emp">
+        select <include refid="publicCode" /> from t_emp
+        <trim prefix="where" prefixOverrides="and">
+            <if test="empName != null and empName != ''">
+                and emp_name = #{empName}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+        </trim>
+    </select>
+
+    <!--where:当条件都不满足时，不会加where；且可以去前面的and|or字段，不会去后面的and|or-->
+    <select id="selectMoreEmpWhere" resultType="emp">
+        select * from t_emp
+        <where>
+            <if test="empName != null and empName != ''">
+                and emp_name = #{empName}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+        </where>
+    </select>
+
+    <!--if:当条件都不满足时，若不在where后加一直为true的条件则会报错-->
+    <select id="selectMoreEmpIf" resultType="emp">
+        select * from t_emp where 1 = 1
+        <if test="empName != null and empName != ''">
+            and emp_name = #{empName}
+        </if>
+        <if test="sex != null and sex != ''">
+            and sex = #{sex}
+        </if>
+        <if test="email != null and email != ''">
+            and email = #{email}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shiyue.mapper.SQLMapper">
+
+    <select id="selectUserByLike" resultType="user">
+<!--        select * from t_user where password like '%${password}%'-->
+<!--        select * from t_user where password like concat('%',#{password},'%');-->
+        select * from t_user where password like "%"#{password}"%";
+    </select>
+
+    <delete id="deleteUserMore">
+        delete from t_user where id in (${ids});
+    </delete>
+
+    <select id="getUserList" resultType="user">
+        select * from ${tableName};
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user values(null,#{username},#{password},#{age},#{sex},#{email});
+    </insert>
+
+</mapper>

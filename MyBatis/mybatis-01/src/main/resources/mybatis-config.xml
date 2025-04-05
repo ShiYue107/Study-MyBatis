@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--导入配置文件-->
+    <properties resource="jdbc.properties"/>
+
+    <!--配置类型别名-->
+    <typeAliases>
+        <!--alias不写为默认类名且不区分大小写-->
+        <!--type通过类全名导入，packager通过类所在包导入-->
+<!--        <typeAlias type="com.shiyue.pojo.User" alias="user"/>-->
+        <package name="com.shiyue.pojo"/>
+
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!--<mapper resource="mappers/UserMapper.xml"/>-->
+        <package name="com.shiyue.mapper"/>
+    </mappers>
+</configuration>

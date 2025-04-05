@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shiyue.mapper.DeptMapper">
+
+    <resultMap id="DeptAndEmpStep" type="Dept">
+        <id property="did" column="did"/>
+        <result property="deptName" column="dept_name"/>
+        <collection
+                property="emps"
+                ofType="Emp"
+                select="com.shiyue.mapper.EmpMapper.getDeptAndEmpStepTwo"
+                column="did"
+                fetchType="lazy">
+        </collection>
+
+    </resultMap>
+    <select id="getDeptAndEmpStepOne" resultMap="DeptAndEmpStep">
+        select * from t_dept where did = #{did}
+    </select>
+    
+    <resultMap id="getDeptAndEmp" type="dept">
+        <id property="did" column="did"/>
+        <result property="deptName" column="dept_name"/>
+        <collection property="emps" ofType="emp">
+            <id property="eid" column="eid"/>
+            <result property="empName" column="emp_name"/>
+            <result property="age" column="age"/>
+            <result property="sex" column="sex"/>
+            <result property="email" column="email"/>
+        </collection>
+    </resultMap>
+    <select id="getDeptAndEmpById" resultMap="getDeptAndEmp">
+        select * from t_dept dept left join t_emp emp on dept.did = emp.did where dept.did = #{did}
+    </select>
+
+    <select id="getEmpByIdStepTwo" resultType="dept">
+        select * from t_dept where did = #{did}
+    </select>
+
+</mapper>
