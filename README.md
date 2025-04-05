@@ -1,2 +1,2 @@
-# MySQL
-MySQL学习笔记
+# MyBatis
+MyBatis学习笔记
